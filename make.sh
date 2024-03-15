@@ -208,9 +208,9 @@ Find_character() {
 }
 Find_character "$GITHUB_WORKSPACE"/images/product/etc/build.prop persist.miui.density_v2
 if [[ $Character_present == true ]]; then
-  sudo sed -i 's/persist.miui.density_v2=[^*]*/persist.miui.density_v2=480/' "$GITHUB_WORKSPACE"/images/product/etc/build.prop
+  sudo sed -i 's/persist.miui.density_v2=[^*]*/persist.miui.density_v2=560/' "$GITHUB_WORKSPACE"/images/product/etc/build.prop
 else
-  sudo sed -i ''"$(sudo sed -n '/ro.miui.notch/=' "$GITHUB_WORKSPACE"/images/product/etc/build.prop)"'a persist.miui.density_v2=480' "$GITHUB_WORKSPACE"/images/product/etc/build.prop
+  sudo sed -i ''"$(sudo sed -n '/ro.miui.notch/=' "$GITHUB_WORKSPACE"/images/product/etc/build.prop)"'a persist.miui.density_v2=560' "$GITHUB_WORKSPACE"/images/product/etc/build.prop
 fi
 ## 补全 HyperOS 版本信息
 echo -e "\e[1;31m - 补全 HyperOS 版本信息 \e[0m"
