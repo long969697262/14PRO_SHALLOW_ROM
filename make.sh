@@ -13,7 +13,7 @@ android_version=$(echo ${URL} | cut -d"_" -f5 | cut -d"." -f1)
 
 magiskboot="$GITHUB_WORKSPACE"/tools/magiskboot
 
-device=houji
+device=shennong
 
 Start_Time() {
   Start_ns=$(date +'%s%N')
@@ -172,7 +172,7 @@ sudo unzip -o -q "$GITHUB_WORKSPACE"/"${device}"_files/displayconfig.zip -d "$GI
 # 修改 build.prop
 echo -e "\e[1;31m - 修改 build.prop \e[0m"
 build_time=$(date) && build_utc=$(date -d "$build_time" +%s)
-sudo sed -i 's/ro.build.user=[^*]*/ro.build.user=YuKongA/' "$GITHUB_WORKSPACE"/images/system/system/build.prop
+sudo sed -i 's/ro.build.user=[^*]*/ro.build.user=kmiit/' "$GITHUB_WORKSPACE"/images/system/system/build.prop
 origin_date=$(sudo cat "$GITHUB_WORKSPACE"/images/system/system/build.prop | grep 'ro.build.version.incremental=' | cut -d '=' -f 2)
 for date_build_prop in $(sudo find "$GITHUB_WORKSPACE"/images/ -type f -name 'build.prop'); do
   sudo sed -i 's/build.date=[^*]*/build.date='"$build_time"'/' "$date_build_prop"
@@ -269,9 +269,9 @@ sudo cp -rf "$GITHUB_WORKSPACE"/apk/services/services.jar "$GITHUB_WORKSPACE"/im
 echo -e "\e[1;31m - 对齐系统更新获取更新路径 \e[0m"
 for mod_device_build in $(sudo find "$GITHUB_WORKSPACE"/images/ -type f -name 'build.prop' 2>/dev/null | xargs grep -rl 'ro.product.mod_device=' | sed 's/^\.\///' | sort); do
   if echo "${date}" | grep -q "XM" || echo "${date}" | grep -q "DEV"; then
-    sudo sed -i 's/ro.product.mod_device=[^*]*/ro.product.mod_device=houji/' "$mod_device_build"
+    sudo sed -i 's/ro.product.mod_device=[^*]*/ro.product.mod_device=shennong/' "$mod_device_build"
   else
-    sudo sed -i 's/ro.product.mod_device=[^*]*/ro.product.mod_device=houji_pre/' "$mod_device_build"
+    sudo sed -i 's/ro.product.mod_device=[^*]*/ro.product.mod_device=shennong_pre/' "$mod_device_build"
   fi
 done
 # 替换更改文件/删除多余文件
@@ -309,20 +309,20 @@ zstd -9 -f "$GITHUB_WORKSPACE"/images/super.img -o "$GITHUB_WORKSPACE"/images/su
 ### 生成卡刷包结束
 
 ### 定制 ROM 包名
-if [[ "${device}" == "houji" ]]; then
-  sudo 7z a "$GITHUB_WORKSPACE"/zip/miui_houji_${date}.zip "$GITHUB_WORKSPACE"/images/*
+if [[ "${device}" == "shennong" ]]; then
+  sudo 7z a "$GITHUB_WORKSPACE"/zip/miui_shennong_${date}.zip "$GITHUB_WORKSPACE"/images/*
   sudo rm -rf "$GITHUB_WORKSPACE"/images
-  md5=$(md5sum "$GITHUB_WORKSPACE"/zip/miui_houji_${date}.zip)
+  md5=$(md5sum "$GITHUB_WORKSPACE"/zip/miui_shennong_${date}.zip)
   echo "MD5=${md5:0:32}" >>$GITHUB_ENV
   zipmd5=${md5:0:10}
   rom_name="miui_"
   if echo "${date}" | grep -q "XM" || echo "${date}" | grep -q "DEV"; then
-    rom_name+="houji_"
+    rom_name+="shennong_"
   else
-    rom_name+="houjiPRE_"
+    rom_name+="shennongPRE_"
   fi
-  rom_name+="${date}_${zipmd5}_${android_version}.0_YuKongA.zip"
-  sudo mv "$GITHUB_WORKSPACE"/zip/miui_houji_${date}.zip "$GITHUB_WORKSPACE"/zip/"${rom_name}"
+  rom_name+="${date}_${zipmd5}_${android_version}.0_kmiit.zip"
+  sudo mv "$GITHUB_WORKSPACE"/zip/miui_shennong_${date}.zip "$GITHUB_WORKSPACE"/zip/"${rom_name}"
   echo "NEW_PACKAGE_NAME="${rom_name}"" >>$GITHUB_ENV
 fi
 ### 定制 ROM 包名结束
