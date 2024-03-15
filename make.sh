@@ -5,6 +5,7 @@ date="$2"
 GITHUB_ENV="$3"
 GITHUB_WORKSPACE="$4"
 VENDOR_URL="$5"
+PATCH_KSU="$6"
 
 origin_date=$(echo ${URL} | cut -d"/" -f4)
 origin_Bottom_date=$(echo ${VENDOR_URL} | cut -d"/" -f4)
@@ -281,6 +282,17 @@ sudo rm -rf "$GITHUB_WORKSPACE"/"${device}"
 sudo rm -rf "$GITHUB_WORKSPACE"/"${device}"_files
 End_Time 功能修复
 ### 功能修复结束
+
+### patch ksu
+if [[ "$PATCH_KSU" == "true" ]]; then
+  Start_Time
+  echo -e "\e[1;31m - 正在Patch Ksu \e[0m"
+  "$GITHUB_WORKSPACE"/tools/ksud boot-patch -b "$GITHUB_WORKSPACE"/images/firmware-update/init_boot.img -m "$GITHUB_WORKSPACE"/tools/android14-6.1_kernelsu.ko --magiskboot "$magiskboot"
+  mv kernelsu_boot_*.img "$GITHUB_WORKSPACE"/images/firmware-update/init_boot.img
+  End_Time Patch Ksu
+else
+  echo -e "\e[1;33m - 跳过Patch Ksu \e[0m"
+fi
 
 ### 生成 super.img
 echo -e "\e[1;31m - 开始打包 IMAGE \e[0m"

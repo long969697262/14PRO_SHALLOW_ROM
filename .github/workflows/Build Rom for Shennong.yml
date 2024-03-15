@@ -12,7 +12,10 @@ on:
         description: "底包下载地址"
         required: true
         default: 'https://cdn-ota.azureedge.net/OS1.0.33.0.UNBCNXM/miui_SHENNONG_OS1.0.33.0.UNBCNXM_bd2a9334c8_14.0.zip'
-
+      PATCH_KSU:
+        description: "是否Patch Ksu"
+        default: false
+        
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -39,7 +42,7 @@ jobs:
           sudo apt-get install python3 aria2 p7zip-full zstd
       - name: 构建 ROM
         run: |
-          sudo bash "$GITHUB_WORKSPACE"/make.sh ${{ github.event.inputs.URL }} ${{ env.date }} $GITHUB_ENV $GITHUB_WORKSPACE ${{ github.event.inputs.VENDOR_URL }}
+          sudo bash "$GITHUB_WORKSPACE"/make.sh ${{ github.event.inputs.URL }} ${{ env.date }} $GITHUB_ENV $GITHUB_WORKSPACE ${{ github.event.inputs.VENDOR_URL }} ${{ github.event.inputs.PATCH_KSU }}
       - name: 处理 ROM
         run: |
           mkdir -p "$GITHUB_WORKSPACE"/GithubRelease
@@ -47,7 +50,7 @@ jobs:
           sudo split -b 1536M -d "$GITHUB_WORKSPACE"/zip/"${{ env.NEW_PACKAGE_NAME }}" "${{ env.NEW_PACKAGE_NAME }}"
           cd "$GITHUB_WORKSPACE"
           touch file.log
-          echo -e "移植版本: ${{ env.date }}\n底包版本: ${{ env.vendor_date }}" > file.log
+          echo -e "移植版本: ${{ env.date }}\n底包版本: ${{ env.vendor_date }}\nPatch Ksu:  ${{ github.event.inputs.PATCH_KSU }}" > file.log
       - name: 上传到 Github Release
         uses: ncipollo/release-action@main
         with:
