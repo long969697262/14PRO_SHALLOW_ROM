@@ -1,21 +1,16 @@
-name: Build ROM for Shennong
+name: Build ROM for Shenngon
 on:
   workflow_dispatch:
     inputs:
       URL:
-        description: "待移植包下载地址"
+        description: "移植包下载地址"
         required: true
-        default: 'https://cdn-ota.azureedge.net/OS1.0.6.0.UNACNXM/miui_AURORA_OS1.0.6.0.UNACNXM_e078a99e28_14.0.zip'
-      CUSTOM_VERSION:
-        description: "待打包版本号"
+        default: 'https://cdn-ota.azureedge.net/OS1.0.7.0.UNACNXM/miui_AURORA_OS1.0.7.0.UNACNXM_81a48e3c20_14.0.zip'
       VENDOR_URL:
         description: "底包下载地址"
         required: true
         default: 'https://cdn-ota.azureedge.net/OS1.0.33.0.UNBCNXM/miui_SHENNONG_OS1.0.33.0.UNBCNXM_bd2a9334c8_14.0.zip'
-      PATCH_KSU:
-        description: "是否Patch Ksu"
-        default: false
-        
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,6 +19,8 @@ jobs:
         uses: easimon/maximize-build-space@master
         with:
           swap-size-mb: 8192
+          root-reserve-mb: 4096
+          temp-reserve-mb: 4096
           remove-dotnet: 'true'
           remove-android: 'true'
           remove-haskell: 'true'
@@ -32,31 +29,24 @@ jobs:
       - name: 准备所需环境
         run: |
           sudo timedatectl set-timezone Asia/Shanghai
-          if [ -n "${{ github.event.inputs.CUSTOM_VERSION }}" ]; then
-              echo "date=${{ github.event.inputs.CUSTOM_VERSION }}" >> $GITHUB_ENV
-          else
-              echo "date=$(echo ${{ github.event.inputs.URL }} | cut -d"/" -f4)" >> $GITHUB_ENV
-          fi
-          echo "vendor_date=$(echo ${{ github.event.inputs.VENDOR_URL }} | cut -d"/" -f4)" >> $GITHUB_ENV
-          echo "device=shennong" >> $GITHUB_ENV
-          sudo apt-get install python3 aria2 p7zip-full zstd
+          sudo apt-get install python3 aria2 zstd
       - name: 构建 ROM
         run: |
-          sudo bash "$GITHUB_WORKSPACE"/make.sh ${{ github.event.inputs.URL }} ${{ env.date }} $GITHUB_ENV $GITHUB_WORKSPACE ${{ github.event.inputs.VENDOR_URL }} ${{ github.event.inputs.PATCH_KSU }}
+          sudo bash "$GITHUB_WORKSPACE"/make.sh ${{ github.event.inputs.URL }} ${{ github.event.inputs.VENDOR_URL }} $GITHUB_ENV $GITHUB_WORKSPACE
       - name: 处理 ROM
         run: |
           mkdir -p "$GITHUB_WORKSPACE"/GithubRelease
           cd "$GITHUB_WORKSPACE"/GithubRelease
-          sudo split -b 1536M -d "$GITHUB_WORKSPACE"/zip/"${{ env.NEW_PACKAGE_NAME }}" "${{ env.NEW_PACKAGE_NAME }}"
+          sudo split -b 1536M -d "$GITHUB_WORKSPACE"/zip/"${{ env.rom_name }}" "${{ env.rom_name }}"
           cd "$GITHUB_WORKSPACE"
           touch file.log
-          echo -e "移植版本: ${{ env.date }}\n底包版本: ${{ env.vendor_date }}\nPatch Ksu:  ${{ github.event.inputs.PATCH_KSU }}" > file.log
+          echo -e "移植版本: ${{ env.origin_os_version }}\n底包版本: ${{ env.vendor_os_version }}\n安全补丁: ${{ env.security_patch }}\n基线版本: ${{ env.base_line }}" > file.log
       - name: 上传到 Github Release
         uses: ncipollo/release-action@main
         with:
           artifacts: ${{ github.workspace }}/GithubRelease/*
-          name: "${{ env.date }}"
-          tag: "${{ env.date }}"
+          name: "${{ env.origin_os_version }}"
+          tag: "${{ env.origin_os_version }}"
           bodyFile: "${{ github.workspace }}/file.log"
           allowUpdates: true
           artifactErrorsFailBuild: true
