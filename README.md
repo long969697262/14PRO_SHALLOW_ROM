@@ -1,4 +1,4 @@
-# 14PRO_Shennong_ROM
+# 14PRO_SHALLOW_ROM
 
 精简系统不常用的部分冗余，精简小米汽车车机功能
 
