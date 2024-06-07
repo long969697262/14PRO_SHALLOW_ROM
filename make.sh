@@ -251,7 +251,7 @@ for vendor_build_prop in $(sudo find "$GITHUB_WORKSPACE"/"${device}"/ -type f -n
 done
 # 精简部分应用1
 echo -e "${Red}- 精简部分应用1"
-apps=("AiAsstVision" "AnalyticsCore" "CarWith" "CatchLog" "com.xiaomi.macro" "com.xiaomi.ugd" "GoogleLocationHistory" "HybridPlatform" "mi_connect_service"  "MiBugReport"  "MiLinkOS1ForHM" "MIS" "MIUIAiasstService" "MIUIgreenguard" "MIUIReporter" "OtaProvision" "OTrPBroker" "PaymentService" "remoteSimLockAuthentication" "remotesimlockservice" "RideModeAudio" "SwitchAccess" "system"  "talkback"  "Updater" "UPTsmService""VoiceAssistAndroidT" "VoiceTrigger" "WMService" "XiaoaiEdgeEngine" "XiaoaiRecommendation")
+apps=("AnalyticsCore" "CarWith" "CatchLog""com.xiaomi.ugd" "GoogleLocationHistory" "HybridPlatform" "MiBugReport" "MIUIgreenguard" "MIUIReporter" "OtaProvision" "OTrPBroker" "PaymentService" "remoteSimLockAuthentication" "remotesimlockservice" "RideModeAudio" "SwitchAccess" "system"  "talkback"  "Updater" "UPTsmService" "WMService")
 for app in "${apps[@]}"; do
   appsui=$(sudo find "$GITHUB_WORKSPACE"/images/product/app/ -type d -iname "*${app}*")
   if [[ -n $appsui ]]; then
@@ -261,7 +261,7 @@ for app in "${apps[@]}"; do
 done
 # 精简部分应用2
 echo -e "${Red}- 精简部分应用2"
-apps=("Health" "MIUIXiaoAiSpeechEngine" "MIGalleryLockscreen" "MIpay" "MIUIDriveMode" "MIUIDuokanReader" "MIUIGameCenter" "MIUINewHome" "MIUIYoupin" "MIUIHuanJi" "MIUIMiDrive" "MIUIVirtualSim" "ThirdAppAssistant" "XMRemoteController" "MIUIVipAccount" "MiuiScanner" "Xinre" "SmartHome" "MiShop" "MiRadio" "MIUICompass" "BaiduIME" "iflytek.inputmethod" "MIUIEmail" "MIUIVideo" "MIUIMusicT" "Health" "MIService")
+apps=("MIGalleryLockscreen" "MIpay" "MIUIDriveMode" "MIUIDuokanReader" "MIUIGameCenter" "MIUINewHome" "MIUIYoupin" "MIUIHuanJi" "MIUIMiDrive" "MIUIVirtualSim" "ThirdAppAssistant" "XMRemoteController" "MIUIVipAccount" "MiuiScanner" "Xinre" "SmartHome" "MiShop" "MiRadio" "MIUICompass" "BaiduIME" "iflytek.inputmethod" "MIUIEmail" "MIUIVideo" "MIUIMusicT" "Health" "MIService")
 for app in "${apps[@]}"; do
   appsui=$(sudo find "$GITHUB_WORKSPACE"/images/product/data-app/ -type d -iname "*${app}*")
   if [[ -n $appsui ]]; then
@@ -281,7 +281,7 @@ for app in "${apps[@]}"; do
 done
 # 精简部分应用4
 echo -e "${Red}- 精简部分应用4"
-apps=("AutoRegistration" "ConfigUpdater" "MiGameCenterSDKService" "MIShare" "MIUIBarrageV2" "MIUIMirror" "RegService")
+apps=("AutoRegistration" "ConfigUpdater" "MiGameCenterSDKService" "MIbrowser" "MIUIBarrageV2" "RegService")
 for app in "${apps[@]}"; do
   appsui=$(sudo find "$GITHUB_WORKSPACE"/images/product/priv-app/ -type d -iname "*${app}*")
   if [[ -n $appsui ]]; then
